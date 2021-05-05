@@ -335,7 +335,7 @@ namespace Innovator.Client
       var name = this.Name;
       var i = name.IndexOf(':');
       var attrs = LinkedListOps.Enumerate(_lastAttr).OfType<IReadOnlyAttribute>().ToArray();
-      if (attrs.Any(a => a.Name == "xml:lang" && a.Value != AmlContext.LocalizationContext.LanguageCode))
+      if (attrs.Any(a => a.Name == "xml:lang"))
       {
         writer.WriteStartElement("i18n", name, "http://www.aras.com/I18N");
       }
