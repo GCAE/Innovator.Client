@@ -120,7 +120,8 @@ namespace Innovator.Client.Connection
     /// </summary>
     public Stream Process(Command request)
     {
-      if (string.IsNullOrEmpty(Database))
+      // Database is null when logging in with ValidateUser
+      if (string.IsNullOrEmpty(Database) && request.Action != CommandAction.ValidateUser)
         throw new Exception("You are no longer connected to Aras. Please log in again.");
 
       var upload = request as UploadCommand;
@@ -141,6 +142,10 @@ namespace Innovator.Client.Connection
     /// <param name="async">Whether the query should be executed asynchronously</param>
     public IPromise<Stream> Process(Command request, bool async)
     {
+      // Database is null when logging in with ValidateUser
+      if (string.IsNullOrEmpty(Database) && request.Action != CommandAction.ValidateUser)
+        throw new Exception("You are no longer connected to Aras. Please log in again.");
+
       var upload = request as UploadCommand;
       if (upload == null)
       {
@@ -355,8 +360,6 @@ namespace Innovator.Client.Connection
         Process(new Command("<logoff skip_unlock=\"" + (unlockOnLogout ? 0 : 1) + "\"/>").WithAction(CommandAction.LogOff), async)
           .Done(r =>
           {
-            _context = null;
-            AmlContext = null;
             Database = null;
             _httpUsername = null;
             UserId = null;
