@@ -79,6 +79,7 @@ namespace Innovator.Client.Connection
     public void Dispose()
     {
       _current?.Dispose();
+      _current = null;
     }
 
     public IEnumerable<string> GetDatabases()
